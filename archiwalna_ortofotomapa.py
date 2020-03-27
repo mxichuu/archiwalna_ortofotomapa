@@ -34,7 +34,7 @@ from .archiwalna_ortofotomapa_dockwidget import ArchiwalnaOrtofotomapaDockWidget
 import os.path
 
 """Wersja wtyczki"""
-plugin_version = '1.0'
+plugin_version = '1.0.1'
 plugin_name = 'Archiwalna Ortofotomapa'
 
 class ArchiwalnaOrtofotomapa:
@@ -235,10 +235,16 @@ class ArchiwalnaOrtofotomapa:
             # Eventy
             slider = self.dockwidget.timeSlider
             slider.setMinimum(1997)
-            slider.setMaximum(datetime.now().year)
+            currentYear = datetime.now().year
+            slider.setMaximum(currentYear)
+
+
+            self.isSliderPressed = False
 
             slider.valueChanged.connect(self.slider_changed)
             slider.sliderReleased.connect(self.slider_released)
+            slider.sliderPressed.connect(self.slider_pressed)
+            slider.sliderMoved.connect(self.slider_moved)
 
             # connect to provide cleanup on closing of dockwidget
             self.dockwidget.closingPlugin.connect(self.onClosePlugin)
@@ -251,7 +257,9 @@ class ArchiwalnaOrtofotomapa:
             self.iface.addDockWidget(Qt.LeftDockWidgetArea, self.dockwidget)
             self.dockwidget.show()
 
-            self.orto = QgsRasterLayer(self.makeDataSourceUri(2020),"Ortofotomapa Archiwalna",'wms')
+            self.orto = QgsRasterLayer(self.makeDataSourceUri(slider.value()),
+                                       "Ortofotomapa Archiwalna %d" % slider.value(),
+                                       'wms')
             self.orto.willBeDeleted.connect(self.orto_removal)
             QgsProject.instance().addMapLayer(self.orto)
         else:
@@ -265,9 +273,22 @@ class ArchiwalnaOrtofotomapa:
     def slider_changed(self):
         slider = self.dockwidget.sender()
         self.dockwidget.timeLabel.setText(str(slider.value()))
+        if not self.isSliderPressed:
+            self.changeOrtoLayer(slider)
+
+    def slider_moved(self):
+        pass
+
+    def slider_pressed(self):
+        slider = self.dockwidget.sender()
+        self.isSliderPressed = True
 
     def slider_released(self):
         slider = self.dockwidget.sender()
+        self.isSliderPressed = False
+        self.changeOrtoLayer(slider)
+
+    def changeOrtoLayer(self, slider):
         # SET DATASOURCE AND RELOAD DATA
 
         uri = self.makeDataSourceUri(slider.value())
@@ -275,7 +296,6 @@ class ArchiwalnaOrtofotomapa:
         self.orto.triggerRepaint()
         # self.orto.dataProvider().reloadData() #QGIS 3.12 and above
         self.orto.setName("Ortofotomapa Archiwalna %d" % slider.value())
-
 
     def makeDataSourceUri(self, year):
         serviceUrl = "http://mapy.geoportal.gov.pl/wss/service/img/guest/ORTO_TIME/MapServer/WMSServer"
