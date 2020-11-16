@@ -28,13 +28,13 @@ from qgis.PyQt.QtWidgets import QAction, QToolBar, QApplication
 from datetime import datetime
 # Initialize Qt resources from file resources.py
 from .resources import *
-from qgis.core import QgsRasterLayer, QgsProject
+from qgis.core import QgsRasterLayer, QgsProject, Qgis
 # Import the code for the DockWidget
 from .archiwalna_ortofotomapa_dockwidget import ArchiwalnaOrtofotomapaDockWidget
 import os.path
 
 """Wersja wtyczki"""
-plugin_version = '1.0.1'
+plugin_version = '1.0.2'
 plugin_name = 'Archiwalna Ortofotomapa'
 
 class ArchiwalnaOrtofotomapa:
@@ -48,6 +48,11 @@ class ArchiwalnaOrtofotomapa:
             application at run time.
         :type iface: QgsInterface
         """
+        from .qgis_feed import QgisFeed
+        if Qgis.QGIS_VERSION_INT >= 31000:
+            self.feed = QgisFeed()
+            self.feed.initFeed()
+
         # Save reference to the QGIS interface
         self.iface = iface
         # initialize plugin directory
