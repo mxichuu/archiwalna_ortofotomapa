@@ -34,7 +34,7 @@ from .archiwalna_ortofotomapa_dockwidget import ArchiwalnaOrtofotomapaDockWidget
 import os.path
 
 """Wersja wtyczki"""
-plugin_version = '1.0.2'
+plugin_version = '1.0.3'
 plugin_name = 'Archiwalna Ortofotomapa'
 
 class ArchiwalnaOrtofotomapa:
@@ -48,8 +48,9 @@ class ArchiwalnaOrtofotomapa:
             application at run time.
         :type iface: QgsInterface
         """
-        from .qgis_feed import QgisFeed
+
         if Qgis.QGIS_VERSION_INT >= 31000:
+            from .qgis_feed import QgisFeed
             self.feed = QgisFeed()
             self.feed.initFeed()
 
