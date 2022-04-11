@@ -32,9 +32,9 @@ from qgis.core import QgsRasterLayer, QgsProject, Qgis
 # Import the code for the DockWidget
 from .archiwalna_ortofotomapa_dockwidget import ArchiwalnaOrtofotomapaDockWidget
 import os.path
+from . import PLUGIN_VERSION as plugin_version
 
 """Wersja wtyczki"""
-plugin_version = '1.0.3'
 plugin_name = 'Archiwalna Ortofotomapa'
 
 class ArchiwalnaOrtofotomapa:
@@ -304,7 +304,8 @@ class ArchiwalnaOrtofotomapa:
         self.orto.setName("Ortofotomapa Archiwalna %d" % slider.value())
 
     def makeDataSourceUri(self, year):
-        serviceUrl = "http://mapy.geoportal.gov.pl/wss/service/img/guest/ORTO_TIME/MapServer/WMSServer"
+        # serviceUrl = "http://mapy.geoportal.gov.pl/wss/service/img/guest/ORTO_TIME/MapServer/WMSServer"
+        serviceUrl = "https://mapy.geoportal.gov.pl/wss/service/PZGIK/ORTO/WMS/StandardResolutionTime"
         return "IgnoreGetFeatureInfoUrl=1&IgnoreGetMapUrl=1&contextualWMSLegend=0&crs=EPSG:2180&format=image/jpeg&layers=Raster&styles=&url=" \
                + serviceUrl + \
                "?TIME=" + \
