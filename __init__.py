@@ -22,8 +22,13 @@
  ***************************************************************************/
  This script initializes the plugin, making it known to QGIS.
 """
+import os
 
-
+PLUGIN_VERSION = ''
+with open(os.path.join(os.path.dirname(__file__), 'metadata.txt'), 'r') as pluginMetadataFile:
+    for line in pluginMetadataFile.readlines():
+        if line.startswith("version="):
+            PLUGIN_VERSION = line.strip().split('=')[-1]
 # noinspection PyPep8Naming
 def classFactory(iface):  # pylint: disable=invalid-name
     from .archiwalna_ortofotomapa import ArchiwalnaOrtofotomapa
