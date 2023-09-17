@@ -70,10 +70,10 @@
     <item row="2" column="0">
      <widget class="QSlider" name="timeSlider">
       <property name="maximum">
-       <number>2020</number>
+       <number>2023</number>
       </property>
       <property name="sliderPosition">
-       <number>2020</number>
+       <number>2023</number>
       </property>
       <property name="orientation">
        <enum>Qt::Horizontal</enum>
@@ -89,7 +89,7 @@
     <item row="1" column="0">
      <widget class="QLabel" name="timeLabel">
       <property name="text">
-       <string>2020</string>
+       <string>2023</string>
       </property>
       <property name="alignment">
        <set>Qt::AlignCenter</set>
